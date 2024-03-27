@@ -1,0 +1,43 @@
+library(shiny)
+library(plotly)
+
+# Função para calcular a densidade bivariada
+calc_phi <- function(y1, y2, r) {
+  phi <- exp(-(y1^2 - 2 * r * y1 * y2 + y2^2) / (2 * (1 - r^2))) / (2 * pi * sqrt(1 - r^2))
+  return(phi)
+}
+
+# Definição dos valores de y1 e y2
+y1 <- seq(-4, 4, by = 0.1)
+y2 <- seq(-4, 4, by = 0.1)
+
+# UI
+ui <- fluidPage(
+  titlePanel("Densidade Normal Bivariada"),
+  sidebarLayout(
+    sidebarPanel(
+      sliderInput("r", "Valor de r:", min = -0.9, max = 0.9, value = 0, step = 0.1, animate = TRUE)
+    ),
+    mainPanel(
+      plotlyOutput("plot")
+    )
+  )
+)
+
+# Server
+server <- function(input, output) {
+  output$plot <- renderPlotly({
+    r <- input$r
+    z <- outer(y1, y2, function(x, y) calc_phi(x, y, r))
+    
+    plot_ly(x = y1, y = y2, z = z, type = "surface") %>%
+      layout(scene = list(xaxis = list(title = "y1"), 
+                          yaxis = list(title = "y2"),
+                          zaxis = list(title = "dens")),
+             title = paste("Densidade Normal Bivariada (r =", r, ")"))
+  })
+}
+
+# Run app
+shinyApp(ui = ui, server = server)
+
