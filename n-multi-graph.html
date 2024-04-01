@@ -66,6 +66,7 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 <pre class="shinylive-r" data-engine="r"><code>#| standalone: true
+#| viewerHeight: 600
 
 library(shiny)
 library(plotly)
@@ -88,7 +89,7 @@ ui &lt;- fluidPage(
       sliderInput("r", "Valor de r:", min = -0.9, max = 0.9, value = 0, step = 0.1, animate = TRUE)
     ),
     mainPanel(
-      plotlyOutput("plot", height = 1100)
+      plotlyOutput("plot")
     )
   )
 )
